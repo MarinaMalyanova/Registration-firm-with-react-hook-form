@@ -1,0 +1,38 @@
+.app {
+	margin: auto;
+	width: 350px;
+	background: rgb(241, 210, 215);
+	padding: 10px;
+	border-radius: 10px;
+}
+
+.errorLabel {
+	color: red;
+}
+.emailForm {
+	display: flex;
+	flex-direction: column;
+}
+input {
+	border-radius: 5px;
+	border: none;
+	padding: 10px;
+	outline: none;
+}
+.registrationButton {
+	margin: 10px 0 0 0;
+	border: none;
+	border-radius: 5px;
+	padding: 10px;
+}
+.spanStar {
+	color: red;
+}
+
+.errorMessage {
+	font-size: 10px;
+	color: red;
+}
+.errorInput {
+	border: 1px solid red;
+}
