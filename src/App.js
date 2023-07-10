@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import styles from './App.module.css';
-import { useEffect, useRef } from 'react';
+import { useRef, useState } from 'react';
 
 const fieldSchema = yup.object().shape({
 	email: yup
@@ -19,8 +19,8 @@ const fieldSchema = yup.object().shape({
 		.max(20, 'Неверный пароль. Должно быть меньше 20 символов.')
 		.min(3, 'Неверный пароль. Должно быть больше 3 символов.')
 		.matches(
-			/^[\w_@.]*$/,
-			'Неверный email. Должны использоваться только буквы, цифры и нижнее подчеркивание.',
+			/^[\w.]*$/,
+			'Неверный пароль. Должны использоваться только буквы и цифры.',
 		),
 	repeatPassword: yup
 		.string()
@@ -33,7 +33,6 @@ export const App = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
-		setFocus,
 	} = useForm({
 		defaultValues: {
 			email: '',
@@ -42,9 +41,7 @@ export const App = () => {
 		},
 		resolver: yupResolver(fieldSchema),
 	});
-	useEffect(() => {
-		setFocus('button');
-	});
+
 	const buttonFocusRef = useRef(null);
 
 	const emailError = errors.email?.message;
@@ -54,6 +51,23 @@ export const App = () => {
 	const onSubmit = (formData) => {
 		console.log(formData);
 	};
+	const [newPassword, setNewPassword] = useState('');
+	const [confirmNewPassword, setConfirmNewPassword] = useState('');
+	const onChange = ({ target }) => {
+		if (target.name === 'password') {
+			setNewPassword(target.value);
+		}
+		// console.log('newPassword', newPassword);
+		if (target.name === 'repeatPassword') {
+			setConfirmNewPassword(target.value);
+			if (target.value === newPassword) {
+				buttonFocusRef.current.focus();
+			}
+		}
+		// console.log('confirmNewPassword', confirmNewPassword);
+	};
+	console.log(!!passwordError, 'passwordError');
+	console.log(!!emailError, 'emailError');
 
 	return (
 		<div className={styles.app}>
@@ -79,6 +93,7 @@ export const App = () => {
 					name="password"
 					{...register('password')}
 					placeholder="Введите пароль"
+					onChange={onChange}
 				/>
 				<div className={styles.errorMessage}>{passwordError}</div>
 				<label>
@@ -90,13 +105,13 @@ export const App = () => {
 					name="repeatPassword"
 					{...register('repeatPassword')}
 					placeholder="Повторите пароль"
+					onChange={onChange}
 				/>
 				<div className={styles.errorMessage}>{repeatPasswordError}</div>
 				<button
 					ref={buttonFocusRef}
 					type="submit"
-					name="button"
-					disabled={!!passwordError || !!emailError}
+					// disabled={!!passwordError || !!emailError}
 					className={styles.registrationButton}
 				>
 					Зарегистрироваться
